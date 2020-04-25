@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.only(top:16),
                 child: ListView.builder(itemBuilder: (context, index){
                   return BlogTile(
-                    imageUrl: articles[index].urlToImage,
+                    
                     title: articles[index].title,
                     desc: articles[index].description,
                   );
@@ -120,14 +120,17 @@ class BlogTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: <Widget>[
-          Image.network(imageUrl),
-          Text(title, style: TextStyle(
-            fontSize: 17,
-          ),),
-          Text(desc)
-        ],
+      child: Card(
+              child: Column(
+          children: <Widget>[
+            //Image.network(imageUrl),
+            Text(title, style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500
+            ),),
+            Text(desc)
+          ],
+        ),
       ),
     );
   }
