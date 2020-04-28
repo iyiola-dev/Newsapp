@@ -3,7 +3,8 @@ import 'package:vaw/helper/news.dart';
 import 'package:vaw/model/Article_model.dart';
 import 'package:vaw/model/category_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:vaw/view/blogtile.dart';
+import 'package:vaw/view/catergorytile.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _HomeState extends State<Home> {
   bool _loading = true;
   @override
   void initState(){
-    super.initState();
+    super.initState(); 
     category =  getCategories();
     getNews();
   }
@@ -34,6 +35,7 @@ class _HomeState extends State<Home> {
         elevation: 0.0,
         centerTitle: true,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text("Track"),
             Text("News" , style: TextStyle(color: Colors.blue),)
@@ -48,14 +50,13 @@ class _HomeState extends State<Home> {
       ) :
        SingleChildScrollView(
                 child: Container(
-                   padding: EdgeInsets.symmetric(horizontal: 16),
+                 padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: <Widget>[
               //Catergory
               Container(
-               
                 height: 70,
-                child: ListView.builder(itemBuilder: (context, index){
+                child: ListView.builder(itemBuilder: (context, index,){
                   return CatergoryTile(
                     imageUrl: category[index].imageUrl,
                     categoryName: category[index].categoryName,
@@ -64,15 +65,15 @@ class _HomeState extends State<Home> {
               ),
               //Blogs
               Container(
-                padding: const EdgeInsets.only(top:16),
-                child: ListView.builder(itemBuilder: (context, index){
-                  return BlogTile(
-                    
-                    title: articles[index].title,
-                    desc: articles[index].description,
-                  );
-                },itemCount: articles.length, shrinkWrap: true,),
-              )
+                  child: ListView.builder(itemBuilder: (context, index){
+                    return BlogTile(
+                      imageUrl: articles[index].urlToImage,
+                      url: articles[index].url,
+                      title: articles[index].title,
+                      desc: articles[index].description, 
+                    );
+                  },itemCount: articles.length, shrinkWrap: true, physics: ClampingScrollPhysics(),),
+                )
             ],
           )
       ),
@@ -80,58 +81,5 @@ class _HomeState extends State<Home> {
     );
   }
 }
-class CatergoryTile extends StatelessWidget {
-  final imageUrl,categoryName;
-  CatergoryTile({this.imageUrl, this.categoryName});
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
 
-      },
-          child: Container(
-        margin: const EdgeInsets.only(right: 16),
-        child: Stack(
-          children: <Widget>[
-            ClipRRect( borderRadius: BorderRadius.circular(6),
-              child: CachedNetworkImage(imageUrl:imageUrl, width: 120, height: 60, fit: BoxFit.cover, )),
-            Container(
-              width: 120, height: 60,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: Colors.black26,
-              ),
-              
-              child: Text(categoryName, style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-class BlogTile extends StatelessWidget {
-  
-  final String imageUrl, title, desc;
-  BlogTile({@required this.imageUrl,@required  this.title,@required  this.desc});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Card(
-              child: Column(
-          children: <Widget>[
-            //Image.network(imageUrl),
-            Text(title, style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500
-            ),),
-            Text(desc)
-          ],
-        ),
-      ),
-    );
-  }
-}
