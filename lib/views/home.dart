@@ -1,3 +1,5 @@
+
+
 import 'package:vaw/helper/data.dart';
 import 'package:vaw/helper/news.dart';
 import 'package:vaw/model/Article_model.dart';
@@ -14,12 +16,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<CategoryModel> category = new List<CategoryModel>();
   List<ArticleModel> articles = new List<ArticleModel>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   bool _loading = true;
   @override
   void initState(){
     super.initState(); 
     category =  getCategories();
     getNews();
+  // WidgetsBinding.instance.addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
   }
   getNews() async{
     News newsClass =News();
@@ -65,21 +69,27 @@ class _HomeState extends State<Home> {
               ),
               //Blogs
               Container(
-                  child: ListView.builder(itemBuilder: (context, index){
-                    return BlogTile(
-                      imageUrl: articles[index].urlToImage,
-                      url: articles[index].url,
-                      title: articles[index].title,
-                      desc: articles[index].description, 
-                    );
-                  },itemCount: articles.length, shrinkWrap: true, physics: ClampingScrollPhysics(),),
-                )
-            ],
-          )
-      ),
-       ),
-    );
-  }
+                height: 1200,
+                  child: RefreshIndicator(
+                    key: _refreshIndicatorKey,
+                    onRefresh: _refresh,
+                                        child: ListView.builder(itemBuilder: (context, index){
+                                          return BlogTile(
+                                            imageUrl: articles[index].urlToImage,
+                                            url: articles[index].url,
+                                            title: articles[index].title,
+                                            desc: articles[index].description, 
+                                          );
+                                        },itemCount: articles.length, shrinkWrap: true, physics: AlwaysScrollableScrollPhysics(),),
+                                      ),
+                                    )
+                                ],
+                              )
+                          ),
+                           ),
+                        );
+                      }
+                    }
+Future<Null> _refresh() async{
+  return await News().getNews();
 }
-
-
