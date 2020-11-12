@@ -1,6 +1,5 @@
-# vaw
-
-A new Flutter project.
+# NewsApp
+A new Flutter app that gets current news from newsapi.org
 
 ## Getting Started
 
