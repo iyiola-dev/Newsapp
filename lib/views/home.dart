@@ -16,15 +16,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<CategoryModel> category = new List<CategoryModel>();
   List<ArticleModel> articles = new List<ArticleModel>();
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  
   bool _loading = true;
   @override
   void initState(){
     super.initState(); 
     category =  getCategories();
     getNews();
-  // WidgetsBinding.instance.addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
-  }
+
   getNews() async{
     News newsClass =News();
     await newsClass.getNews();
@@ -70,9 +69,7 @@ class _HomeState extends State<Home> {
               //Blogs
               Container(
                 height: 1200,
-                  child: RefreshIndicator(
-                    key: _refreshIndicatorKey,
-                    onRefresh: _refresh,
+                  
                                         child: ListView.builder(itemBuilder: (context, index){
                                           return BlogTile(
                                             imageUrl: articles[index].urlToImage,
@@ -82,7 +79,7 @@ class _HomeState extends State<Home> {
                                           );
                                         },itemCount: articles.length, shrinkWrap: true, physics: AlwaysScrollableScrollPhysics(),),
                                       ),
-                                    )
+                                    
                                 ],
                               )
                           ),
@@ -90,6 +87,3 @@ class _HomeState extends State<Home> {
                         );
                       }
                     }
-Future<Null> _refresh() async{
-  return await News().getNews();
-}
